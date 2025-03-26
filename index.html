@@ -10,25 +10,31 @@
         <meta charset="UTF-8">
         <title>FIFA ONLINE3 메인화면</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/basic_js_test.js"></script>
+        <script type="text/javascript" src="js/search.js"></script>
         <style>
             table {
                 font-size: 20pt;
                 color: white;
             }
+            .navbar .nav-link {
+              color: white !important;
+            }
         </style>
     </head>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <body style="background-color: black;" >
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary-dark">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">FIFA ONLINE3</a>
+              <img src="image/LOGO.png" width="180" height="50">
+              <a class="navbar-brand" href="index.html" style="color: white;">홈페이지 테스트</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">메인페이지</a>
+                    <a class="nav-link active" aria-current="page" href="index.html">메인페이지</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="https://nxlogin.nexon.com/common/login.aspx?redirect=http://fconline.nexon.com/Profile/squad">프로필</a>
@@ -54,10 +60,15 @@
                     </ul>
                   </li>
                 </ul>
-                <form class="d-flex" role="search">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
+                <nav class="navbar" style="background-color: black;">
+                  <div class="container-fluid">
+                  <a class="navbar-brand" href="#" style="color: white;">게임정보</a>
+                  <form class="d-flex" role="search">
+                  <input class="form-control me-2" type="search" placeholder="키워드입력" aria-label="Search">
+                  <button id="search_btn" class="btn btn-outline-success" type="button">검색하기</button>
                 </form>
+              </div>
+              </nav>
               </div>
             </div>
           </nav>
@@ -69,36 +80,45 @@
     <hr>
     <div style="display: flex; justify-content: center;">
     <a href="index.html" target="_blank">
-        <img src="image/MAIN.jpg" width="1200" height="768">
+        <img src="image/MAIN.jpg" class="img-fluid" width="1800" height="700">
     </a>
     </div>
     <div style="display: flex; justify-content: center;">
-        <table border="1">
-            <caption>인기 팀</caption>
-            <tbody>
-                <tr bgcolor="red">
-                    <td width="80">뮌헨</td>
-                    <td>레알 마드리드</td>
-                    <td>바르셀로나</td>
-                    <td>리버풀</td>
-                    <td>AC밀란</td>
-                </tr>
-                <tr bgcolor="grey">
-                    <td colspan="5">
-                        <a href="https://fconline.nexon.com/main/index" target="_blank">FIFA ONLINE3 웹사이트 접속</a>
-                        </h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td bgcolor="blue"><b>맨시티</b></td>
-                    <td>첼시</td>
-                    <td>아스날</td>
-                    <td colspan="2">
-                        <img src="image/image.png" width="50" height="50">맨체스터 유나이티드     
-                </tr>
-            </tbody>
+      <table class="table caption-top" border="5">
+          <caption style="color: white;">인기 팀컬러</caption>
+          <tbody>
+              <tr class="table-primary">
+                  <td><b>#</b></td>
+                  <td><b>1</b></td>
+                  <td><b>2</b></td>
+                  <td><b>3</b></td>
+                  <td><b>4</b></td>
+                  <td><b>5</b></td>
+              </tr>
+              <tr class="table-secondary">
+                  <td><b>1</b></td>
+                  <td>뮌헨</td>
+                  <td>돌문</td>
+                  <td>리버풀</td>
+                  <td>바르셀로나</td>
+                  <td>레알마드리드</td>
+              </tr>
+              <tr class="table-success">
+                  <td><b>공백</b></td>
+                  <td colspan="5"><a href="https://fconline.nexon.com/history" target="_blank">피파 온라인3 웹사이트 접속하기</a></td>
+              </tr>
+              <tr class="table-danger">
+                  <td><b>2</b></td>
+                  <td><b>브루노</b></td>
+                  <td>마이누</td>
+                  <td>더리흐트</td>
+                  <td colspan="2">
+                      <font size="13"><img src="image/image.png" width="50" height="50">맨체스터 유나이티드</font>
+                  </td>
+              </tr>
+          </tbody>
         </table>
-    </div>
+        </div>
     <hr>
     <div style="display: flex; justify-content: center;">
         <h3 style="font-size: 24px; font-weight: bold; font-style: italic; color: white; font-family: '굴림';">EA SPORTS 게임 회사 정보 2025년 X월 작성됨</h3>
