@@ -11,3 +11,4 @@ This project is a starting point for a Web application.
 ## 7, 8주차 중간고사
 ## 9주차 수업 팝업창(쿠키) 추가 적용 완료 
 ## 10주차 수업 쿠키 및 세션 적용 완료 (연습문제 포함)
+## 11주차 수업 세션 암호화, 복호화 완료 (연습문제 포함)
