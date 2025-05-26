@@ -12,7 +12,8 @@ async function generateKey() {
     );
 }
 
-async function encrypt_text_gcm(password) {
+// 암호화 함수 (AES-GCM)
+export async function encrypt_text_gcm(password) {
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const key = await generateKey();
 
@@ -30,7 +31,8 @@ async function encrypt_text_gcm(password) {
     return btoa(String.fromCharCode(...combined));
 }
 
-async function decrypt_text_gcm() {
+// 복호화 함수 (AES-GCM)
+export async function decrypt_text_gcm() {
     const encryptedBase64 = sessionStorage.getItem("Session_Storage_pass2");
     if (!encryptedBase64) {
         console.warn("Session_Storage_pass2 값이 없습니다.");

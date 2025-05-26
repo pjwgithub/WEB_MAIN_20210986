@@ -1,7 +1,8 @@
 import { session_set, session_check, session_del } from './session.js';
 import { encrypt_text_cbc, decrypt_text_cbc } from './crypto.js';
-import { encrypt_text_gcm, decrypt_text_gcm } from './crypto2.js';
+import { encrypt_text_gcm,  decrypt_text_gcm } from './crypto2.js';
 import { generateJWT, verifyJWT, isAuthenticated } from './jwt_token.js';
+
 
 const check_xss = (input) => {
     const DOMPurify = window.DOMPurify;
@@ -13,23 +14,17 @@ const check_xss = (input) => {
     return sanitizedInput;
 };
 
-async function init_logined() {
-    if (sessionStorage) {
-        const result = await decrypt_text_cbc(); // 비동기로 호출
-        console.log("복호화된 값 2:", result);    // 원하는 로그 출력
-        await decrypt_text_gcm();                // GCM 복호화도 그대로
-    } else {
-        alert("세션 스토리지 지원 x");
+function local_session_check() {
+    if (window.location.pathname.includes('index_login.html')) {
+        if (localStorage.getItem("isLoggedOut") === "true") {
+            localStorage.removeItem("isLoggedOut");
+            return;
+        }
+        if (sessionStorage.getItem("Session_Storage_test")) {
+            alert("이미 로그인 되었습니다.");
+            location.href = '../login/index_login.html';
+        }
     }
-}
-
-export function logout() {
-    console.log("로그아웃 함수 호출됨");
-    localStorage.setItem("isLoggedOut", "true");
-    session_del();
-    localStorage.removeItem("jwt_token");
-    console.log("세션 및 토큰 삭제 완료, 리디렉션 시작");
-    location.href = '../index.html';
 }
 
 export async function local_session_set() {
@@ -56,17 +51,22 @@ export function local_session_del() {
     }
 }
 
-function local_session_check() {
-    if (window.location.pathname.includes('index_login.html')) {
-        if (localStorage.getItem("isLoggedOut") === "true") {
-            localStorage.removeItem("isLoggedOut");
-            return;
-        }
-        if (sessionStorage.getItem("Session_Storage_id")) {
-            alert("이미 로그인 되었습니다.");
-            location.href = '../login/index_login.html';
-        }
+async function init_logined() {
+    if (sessionStorage) {
+        const result = await decrypt_text_cbc(); // 비동기로 호출
+        console.log("복호화된 값 2:", result);     // 원하는 로그 출력
+        await decrypt_text_gcm();                  // GCM 복호화도 그대로
+    } else {
+        alert("세션 스토리지 지원 x");
     }
+}
+
+//11주차 추가문제
+function logout() {
+    localStorage.setItem("isLoggedOut", "true");
+    session_del(); //기존세션삭제
+    localStorage.removeItem("jwt_token"); //JWT토큰삭제
+    location.href = '../index.html'; //메인페이지 이동
 }
 
 function login_failed() {
@@ -96,18 +96,19 @@ function logout_count(userId) {
 }
 
 function setCookie(name, value, expiredays) {
-    const date = new Date();
+    var date = new Date();
     date.setDate(date.getDate() + expiredays);
     document.cookie = escape(name) + "=" + escape(value) + "; expires=" + date.toUTCString() + "; path=/";
 }
 
 function getCookie(name) {
-    const cookie = document.cookie;
+    var cookie = document.cookie;
+    console.log("쿠키를 요청합니다.");
     if (cookie !== "") {
-        const cookie_array = cookie.split("; ");
-        for (const item of cookie_array) {
-            const [key, val] = item.split("=");
-            if (key.trim() === name) return val;
+        var cookie_array = cookie.split("; ");
+        for (var index in cookie_array) {
+            var cookie_name = cookie_array[index].split("=");
+            if (cookie_name[0].trim() === name) return cookie_name[1];
         }
     }
     return;
@@ -116,7 +117,7 @@ function getCookie(name) {
 function init() {
     const emailInput = document.getElementById('typeEmailX');
     const idsave_check = document.getElementById('idSaveCheck');
-    const get_id = getCookie("id");
+    let get_id = getCookie("id");
     if (get_id && emailInput) {
         emailInput.value = get_id;
         idsave_check.checked = true;
@@ -125,7 +126,7 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    init();
+init();
 });
 
 const check_input = async () => {
@@ -133,7 +134,6 @@ const check_input = async () => {
     const emailInput = document.getElementById('typeEmailX');
     const passwordInput = document.getElementById('typePasswordX');
     const idsave_check = document.getElementById('idSaveCheck');
-
     alert('아이디, 패스워드를 체크합니다');
 
     const emailValue = emailInput.value.trim();
@@ -152,31 +152,26 @@ const check_input = async () => {
         login_failed();
         return false;
     }
-
     if (passwordValue.length < 12 || passwordValue.length > 15) {
         alert('비밀번호는 반드시 12~15글자의 형식을 유지해야 합니다.');
         login_failed();
         return false;
     }
-
     if (/(.)\1{2,}/.test(emailValue)) {
         alert('아이디에 동일한 문자가 3번 이상 반복되면 안 됩니다.');
         login_failed();
         return false;
     }
-
     if (/(\d{2,})[a-zA-Z가-힣]*\1/.test(emailValue)) {
         alert('아이디에 연속된 숫자 2자리 이상이 반복되면 안 됩니다.');
         login_failed();
         return false;
     }
-
     if (!/[A-Z]/.test(passwordValue) || !/[a-z]/.test(passwordValue)) {
         alert('패스워드는 대소문자를 1개 이상 포함해야 합니다.');
         login_failed();
         return false;
     }
-
     if (!/[!,@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(passwordValue)) {
         alert('패스워드는 특수문자를 1개 이상 포함해야 합니다.');
         login_failed();
@@ -184,29 +179,31 @@ const check_input = async () => {
     }
 
     if (idsave_check.checked) {
+        alert("쿠키를 저장합니다.", emailValue);
         setCookie("id", emailValue, 1);
+        alert("쿠키 값 :" + emailValue);
     } else {
-        setCookie("id", "", -1);
+        setCookie("id", emailValue.value, 0);
     }
 
-    console.log("이메일:", emailValue);
-    console.log("비밀번호:", passwordValue);
+    console.log('이메일:', emailValue);
+    console.log('비밀번호:', passwordValue);
     login_count(emailValue);
 
-    await session_set();
-    await init_logined();
+    sessionStorage.setItem("Session_Storage_pass", passwordValue);
 
-    // JWT 페이로드 + 로그 출력
+    await session_set(); // session_set 호출
+    await init_logined(); // 초기화 및 복호화 출력
+    
+    // JWT 생성 및 저장
     const payload = {
         id: emailValue,
-        exp: Math.floor(Date.now() / 1000) + 3600
+        exp: Math.floor(Date.now() / 1000) + (60 * 60) // 1시간 유효
     };
     const token = generateJWT(payload);
     localStorage.setItem("jwt_token", token);
-
-    console.log("> ", payload);
-    console.log(JSON.stringify({ id: emailValue, otp: new Date().toISOString() }));
-
+    console.log("JWT 페이로드: ", payload); // JWT 페이로드 출력
+    
     loginForm.submit();
 };
 
@@ -219,7 +216,11 @@ const loginOut = (obj) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const failCount = parseInt(getCookie('login_failed_cnt')) || 0;
+    // init() 호출 제거, 대신 checkAuth와 init_logined 호출
+    isAuthenticated(); // JWT 토큰 인증 확인
+    init_logined(); // 세션 복호화
+
+const failCount = parseInt(getCookie('login_failed_cnt')) || 0;
     if (failCount >= 3) {
         const loginBtn = document.getElementById("login_btn");
         if (loginBtn) {
@@ -232,16 +233,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginBtn) {
         loginBtn.addEventListener('click', check_input);
     }
-
     const logoutBtn = document.getElementById("logout_btn");
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
-            const userId = sessionStorage.getItem("Session_Storage_id");
+            const userId = sessionStorage.getItem("Session_Storage_test");
             logout_count(userId);
             logout();
         });
     }
-
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
             const userId = document.getElementById("typeEmailX").value.trim();
