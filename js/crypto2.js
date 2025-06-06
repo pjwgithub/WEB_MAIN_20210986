@@ -12,8 +12,7 @@ async function generateKey() {
     );
 }
 
-// 암호화 함수 (AES-GCM)
-export async function encrypt_text_gcm(password) {
+async function encrypt_text_gcm(password) {
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const key = await generateKey();
 
@@ -31,15 +30,14 @@ export async function encrypt_text_gcm(password) {
     return btoa(String.fromCharCode(...combined));
 }
 
-// 복호화 함수 (AES-GCM)
-export async function decrypt_text_gcm() {
-    const encryptedBase64 = sessionStorage.getItem("Session_Storage_pass2");
-    if (!encryptedBase64) {
-        console.warn("Session_Storage_pass2 값이 없습니다.");
+async function decrypt_text_gcm(encryptedBase64) {
+    const base64 = encryptedBase64 || sessionStorage.getItem("Session_Storage_pass_gcm");
+    if (!base64) {
+        console.warn("Session_Storage_pass_gcm 값이 없습니다.");
         return;
     }
 
-    const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+    const combined = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
     const iv = combined.slice(0, 12);
     const data = combined.slice(12);
     const key = await generateKey();
@@ -50,8 +48,12 @@ export async function decrypt_text_gcm() {
             key,
             data
         );
-        console.log("(GCM) 복호화된 값:", decoder.decode(decrypted));
+        return decoder.decode(decrypted);
     } catch (e) {
         console.error("복호화 실패:", e);
     }
 }
+
+
+
+export { encrypt_text_gcm as encrypt_text, decrypt_text_gcm as decrypt_text };
