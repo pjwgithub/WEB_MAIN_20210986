@@ -210,7 +210,6 @@ const loginOut = (obj) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  checkAuth();
   init_logined();
 
   const failCount = parseInt(getCookie('login_failed_cnt')) || 0;
