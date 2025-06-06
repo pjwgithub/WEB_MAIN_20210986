@@ -151,6 +151,7 @@ const check_input = async () => {
     location.href = "../login/index_login.html";
 };
 document.addEventListener('DOMContentLoaded', () => {
+    init();
     init_logined();
     const loginBtn = document.getElementById("login_btn");
     if (loginBtn) 
